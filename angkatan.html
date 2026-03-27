@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angkatan — Pernah di Sini</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  if (typeof supabase === 'undefined') {
+    document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>');
+  }
+</script>
+<style>
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(18px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes colorSwitch {
+    from { opacity:0.5; transform:scale(0.97); }
+    to   { opacity:1;   transform:scale(1); }
+  }
+  .fade-up  { opacity:0; animation:fadeUp 0.9s ease forwards; }
+  .delay-1  { animation-delay:0.15s; }
+  .delay-2  { animation-delay:0.35s; }
+  .delay-3  { animation-delay:0.55s; }
+  .delay-4  { animation-delay:0.75s; }
+
+  /* ── HERO ── */
+  .hero {
+    padding:40px 24px 32px;
+    max-width:var(--page-max); margin:0 auto; text-align:center;
+  }
+  @media (min-width:1024px) {
+    .hero { max-width:var(--desktop-max); padding:64px 48px 48px; text-align:left; display:flex; align-items:center; justify-content:space-between; gap:40px; }
+    .hero-badge { display:inline-flex; }
+    .hero-title { font-size:64px; }
+    .hero > div:last-child { display:none; } /* remove empty col */
+  }
+  .hero-label { font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--text-dim); margin-bottom:16px; }
+  .hero-title {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(40px,11vw,56px); font-weight:700; line-height:1.05;
+    color:var(--text); margin-bottom:6px;
+  }
+  .hero-title span { font-style:italic; color:var(--gold); }
+  .hero-divider {
+    width:40px; height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    margin:20px auto;
+  }
+  .hero-sub { font-size:13px; color:var(--text-muted); max-width:320px; margin:0 auto 20px; line-height:1.7; }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--bg-card); border:1px solid var(--border);
+    padding:8px 20px; font-size:12px; color:var(--text-muted);
+  }
+  .hero-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--border-gold); transition:background 0.4s; }
+
+  /* ── FILTER JURUSAN ── */
+  .jurusan-section { max-width:var(--page-max); margin:0 auto; padding:0 24px 28px; }
+  @media (min-width:1024px) {
+    .jurusan-section { max-width:var(--desktop-max); padding:0 48px 40px; }
+    .jurusan-grid    { grid-template-columns:repeat(4,1fr); gap:16px; }
+    .card-semua      { display:flex; align-items:center; justify-content:space-between; text-align:left; padding:20px 28px; }
+  }
+
+  .card-semua {
+    background:var(--bg-card); border:2px solid var(--gold-dim);
+    padding:18px 20px; text-align:center; cursor:pointer;
+    transition:all 0.3s; margin-bottom:16px;
+  }
+  .card-semua.active { border-color:var(--gold); background:var(--bg-raised); }
+  .card-semua h4 { font-family:'Playfair Display',serif; font-size:16px; color:var(--text); }
+  .card-semua p  { font-size:11px; color:var(--text-dim); margin-top:4px; }
+  .card-semua .count { font-size:13px; color:var(--gold); margin-top:6px; }
+
+  .jurusan-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+
+  .jurusan-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    padding:16px 10px; text-align:center; cursor:pointer; transition:all 0.3s;
+  }
+  .jurusan-card h4 { font-family:'Playfair Display',serif; font-size:13px; color:var(--text); }
+  .jurusan-card p  { font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.4; }
+  .jurusan-card .count { font-size:12px; margin-top:6px; font-weight:500; transition:color 0.3s; }
+
+  /* Wali kelas default → gold, aktif → warna jurusan */
+  .jurusan-card[data-jurusan="TSM"]:hover { border-color:#E05C50; }
+  .jurusan-card[data-jurusan="MP"]:hover  { border-color:#D4AC0D; }
+  .jurusan-card[data-jurusan="ATP"]:hover { border-color:#27AE60; }
+  .jurusan-card[data-jurusan="APHP"]:hover{ border-color:#3498DB; }
+
+  .jurusan-card[data-jurusan="TSM"].active  { border-color:#E05C50; background:rgba(224,92,80,0.08); }
+  .jurusan-card[data-jurusan="MP"].active   { border-color:#D4AC0D; background:rgba(212,172,13,0.08); }
+  .jurusan-card[data-jurusan="ATP"].active  { border-color:#27AE60; background:rgba(39,174,96,0.08); }
+  .jurusan-card[data-jurusan="APHP"].active { border-color:#3498DB; background:rgba(52,152,219,0.08); }
+
+  /* ── RESET ── */
+  .reset-btn {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    margin:12px auto 28px; background:none; border:1px solid var(--border);
+    padding:7px 20px; font-family:'DM Sans',sans-serif; font-size:11px;
+    letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); cursor:pointer; transition:all 0.2s;
+  }
+  .reset-btn:hover { border-color:var(--border-gold); color:var(--text); }
+
+  /* ── ALPHABET FILTER ── */
+  .alpha-section { max-width:var(--page-max); margin:0 auto; padding:0 24px 24px; }
+  @media (min-width:1024px) {
+    .alpha-section { max-width:var(--desktop-max); padding:0 48px 32px; }
+    .alpha-grid    { grid-template-columns:repeat(13,1fr); }
+  }
+  .alpha-label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); text-align:center; margin-bottom:10px; }
+  .alpha-grid  { display:grid; grid-template-columns:repeat(9,1fr); gap:4px; }
+  .alpha-btn {
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    background:var(--bg-card); border:1px solid var(--border);
+    font-size:11px; color:var(--text-muted); cursor:pointer; transition:all 0.15s;
+  }
+  .alpha-btn:hover  { border-color:var(--border-gold); color:var(--text); }
+  .alpha-btn.active { background:var(--gold); border-color:var(--gold); color:var(--bg); font-weight:500; }
+  .alpha-btn.dimmed { opacity:0.3; pointer-events:none; }
+
+  /* ── STUDENTS GRID ── */
+  .students-section { max-width:var(--page-max); margin:0 auto; padding:0 24px 80px; }
+  .students-grid    { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media (min-width:1024px) {
+    .students-section { max-width:var(--desktop-max); padding:0 48px 100px; }
+    .students-grid    { grid-template-columns:repeat(3,1fr); gap:14px; }
+  }
+  @media (min-width:1280px) {
+    .students-grid { grid-template-columns:repeat(4,1fr); }
+  }
+
+  /* DEFAULT state — gold/abu */
+  .student-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-left:3px solid var(--gold-dim);
+    padding:16px; cursor:default; transition:border-color 0.35s, background 0.35s, transform 0.2s, box-shadow 0.2s;
+  }
+  .student-card:hover {
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px var(--shadow);
+    border-color:var(--border-gold);
+    border-left-color:var(--gold);
+  }
+
+  /* COLORED state — muncul saat filter jurusan aktif */
+  .student-card.colored-TSM  { border-left-color:#E05C50; }
+  .student-card.colored-MP   { border-left-color:#D4AC0D; }
+  .student-card.colored-ATP  { border-left-color:#27AE60; }
+  .student-card.colored-APHP { border-left-color:#3498DB; }
+
+  .student-card.colored-TSM:hover  { border-color:#E05C50; }
+  .student-card.colored-MP:hover   { border-color:#D4AC0D; }
+  .student-card.colored-ATP:hover  { border-color:#27AE60; }
+  .student-card.colored-APHP:hover { border-color:#3498DB; }
+
+  /* Avatar — default gold, colored saat filter aktif */
+  .student-avatar {
+    width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+    font-family:'Playfair Display',serif; font-size:16px; font-weight:700;
+    color:var(--bg); margin-bottom:10px; flex-shrink:0;
+    background:var(--gold-dim); transition:background 0.35s;
+  }
+  .student-card.colored-TSM  .student-avatar { background:#E05C50; }
+  .student-card.colored-MP   .student-avatar { background:#D4AC0D; }
+  .student-card.colored-ATP  .student-avatar { background:#27AE60; }
+  .student-card.colored-APHP .student-avatar { background:#3498DB; }
+
+  /* Badge — default abu, colored saat filter aktif */
+  .student-badge {
+    font-size:9px; letter-spacing:1px; text-transform:uppercase;
+    padding:2px 7px; font-weight:500;
+    background:rgba(185,155,90,0.12); color:var(--gold-dim); border:1px solid rgba(185,155,90,0.2);
+    transition:background 0.35s, color 0.35s, border-color 0.35s;
+  }
+  .student-card.colored-TSM  .student-badge { background:rgba(224,92,80,0.15); color:#E05C50; border-color:rgba(224,92,80,0.3); }
+  .student-card.colored-MP   .student-badge { background:rgba(212,172,13,0.15); color:#D4AC0D; border-color:rgba(212,172,13,0.3); }
+  .student-card.colored-ATP  .student-badge { background:rgba(39,174,96,0.15);  color:#27AE60; border-color:rgba(39,174,96,0.3); }
+  .student-card.colored-APHP .student-badge { background:rgba(52,152,219,0.15); color:#3498DB; border-color:rgba(52,152,219,0.3); }
+
+  .student-name {
+    font-size:12px; font-weight:400; color:var(--text); line-height:1.4; margin-bottom:6px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .student-meta   { display:flex; align-items:center; justify-content:space-between; gap:4px; }
+  .student-id     { font-size:10px; color:var(--text-dim); letter-spacing:0.5px; }
+
+  /* ── SWITCH ANIMATION ── */
+  .students-grid.switching .student-card {
+    animation:colorSwitch 0.3s ease forwards;
+  }
+
+  /* ── SKELETON ── */
+  .skeleton-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-left:3px solid var(--bg-hover); padding:16px; animation:shimmer 1.4s infinite;
+  }
+  .skel { background:var(--bg-hover); border-radius:2px; }
+  @keyframes shimmer { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+  /* ── EMPTY ── */
+  .empty-state {
+    grid-column:span 2; text-align:center;
+    padding:48px 24px; background:var(--bg-card); border:1px dashed var(--border);
+  }
+  .empty-state p { font-size:13px; color:var(--text-muted); margin-bottom:16px; }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    background:var(--bg-raised); border-top:1px solid var(--border);
+    padding:40px 24px; text-align:center;
+  }
+  .site-footer p { font-family:'Playfair Display',serif; font-style:italic; font-size:15px; color:var(--text); margin-bottom:4px; }
+  .site-footer small { font-size:11px; color:var(--text-dim); letter-spacing:1px; }
+  .site-footer .gold-line { width:32px; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:12px auto; }
+
+  @media (max-width:360px) {
+    .jurusan-grid  { grid-template-columns:repeat(2,1fr); }
+    .alpha-grid    { grid-template-columns:repeat(7,1fr); }
+    .students-grid { grid-template-columns:1fr; }
+    .empty-state   { grid-column:span 1; }
+  }
+
+  @media (min-width: 1024px) {
+    .hero          { max-width: var(--desktop-max); padding: 64px 48px 48px; }
+    .hero-title    { font-size: 64px; }
+
+    .jurusan-section { max-width: var(--desktop-max); padding: 0 48px 40px; }
+    .jurusan-grid    { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .card-semua      { display: flex; align-items: center; justify-content: space-between; text-align: left; padding: 20px 28px; }
+
+    .alpha-section { max-width: var(--desktop-max); padding: 0 48px 32px; }
+    .alpha-grid    { grid-template-columns: repeat(13, 1fr); }
+
+    .students-section { max-width: var(--desktop-max); padding: 0 48px 80px; }
+    .students-grid    { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+    .site-footer { padding: 48px; }
+  }
+
+</style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">Pernah di Sini</a>
+      <div class="navbar-links">
+        <a href="angkatan.html" class="nav-link active">Angkatan</a>
+        <a href="galeri.html"   class="nav-link">Galeri</a>
+        <a href="pesan.html"    class="nav-link">Pesan</a>
+        <a href="pustaka.html"  class="nav-link">Pustaka</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-label fade-up delay-1">— Angkatan 2023–2026 —</p>
+    <h1 class="hero-title fade-up delay-2">Arsip <span>Angkatan.</span></h1>
+    <div class="hero-divider fade-up delay-2"></div>
+    <p class="hero-sub fade-up delay-3">68 nama, 4 cerita. Tidak semuanya sampai pada halaman yang sama.</p>
+    <div class="hero-badge fade-up delay-4">
+      <div class="dot" id="badge-dot"></div>
+      <span id="total-label">68 siswa</span>
+      <div class="dot"></div>
+      <span>4 jurusan</span>
+    </div>
+
+    <!-- CTA ke Galeri -->
+    <div style="margin-top:24px" class="fade-up delay-4">
+      <a href="galeri.html"
+         style="display:inline-flex;align-items:center;gap:10px;
+                background:none;border:1px solid var(--border-gold);
+                color:var(--gold);font-family:'DM Sans',sans-serif;
+                font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+                padding:10px 24px;text-decoration:none;transition:all 0.2s"
+         onmouseover="this.style.background='var(--gold)';this.style.color='var(--bg)'"
+         onmouseout="this.style.background='none';this.style.color='var(--gold)'">
+        Lihat Galeri
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+  </div>
+
+  <!-- FILTER JURUSAN -->
+  <div class="jurusan-section">
+    <div class="card-semua active" id="card-semua" data-jurusan="all">
+      <h4>Semua</h4>
+      <p>Angkatan 2026</p>
+      <div class="count" id="count-all">68 siswa</div>
+    </div>
+    <div class="jurusan-grid">
+      <div class="jurusan-card" data-jurusan="TSM">
+        <h4>TSM</h4>
+        <p id="wali-TSM">—</p>
+        <div class="count" id="count-TSM" style="color:var(--gold-dim)">— siswa</div>
+      </div>
+      <div class="jurusan-card" data-jurusan="MP">
+        <h4>MP</h4>
+        <p id="wali-MP">—</p>
+        <div class="count" id="count-MP" style="color:var(--gold-dim)">— siswa</div>
+      </div>
+      <div class="jurusan-card" data-jurusan="ATP">
+        <h4>ATP</h4>
+        <p id="wali-ATP">—</p>
+        <div class="count" id="count-ATP" style="color:var(--gold-dim)">— siswa</div>
+      </div>
+      <div class="jurusan-card" data-jurusan="APHP">
+        <h4>APHP</h4>
+        <p id="wali-APHP">—</p>
+        <div class="count" id="count-APHP" style="color:var(--gold-dim)">— siswa</div>
+      </div>
+    </div>
+    <button class="reset-btn" id="reset-btn">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+        <path d="M3 3v5h5"/>
+      </svg>
+      Reset Filter
+    </button>
+  </div>
+
+  <!-- ALPHABET FILTER -->
+  <div class="alpha-section">
+    <p class="alpha-label">Inisial</p>
+    <div class="alpha-grid" id="alpha-grid"></div>
+  </div>
+
+  <!-- STUDENTS -->
+  <div class="students-section">
+    <div class="students-grid" id="students-grid"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>SMK Negeri 3 Tapung Hulu</p>
+    <div class="gold-line"></div>
+    <small>Angkatan 2023 – 2026 &nbsp;·&nbsp; © 2026 Pernah di Sini</small>
+  </footer>
+
+  <footer class="footer-nav">
+    <div class="footer-nav-inner">
+      <a href="pembuka.html" class="footer-prev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Pembuka</a>
+      <a href="galeri.html" class="footer-next">Galeri <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </footer>
+  <div class="toast" id="toast"></div>
+
+  <script src="supabase.js"></script>
+  <script>
+    // ── CONSTANTS ──
+    const JC = { TSM:'#E05C50', MP:'#D4AC0D', ATP:'#27AE60', APHP:'#3498DB' };
+    const LETTERS = ['All','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
+    // ── STATE ──
+    let allSiswa      = [];
+    let activeJurusan = 'all';   // 'all' | 'TSM' | 'MP' | 'ATP' | 'APHP'
+    let activeLetter  = 'all';
+
+    // ── INIT ──
+    document.addEventListener('DOMContentLoaded', async () => {
+      buildAlphabet();
+      bindFilters();
+      await loadSiswa();
+    });
+
+    // ── FETCH dari tabel `students` ──
+    async function loadSiswa() {
+      showSkeleton();
+      try {
+        const db = getSupabaseClient();
+        const { data, error } = await db
+          .from('students')
+          .select('id, name, jurusan, wali_kelas, nisn')
+          .eq('is_active', true)
+          .eq('angkatan', '2026')
+          .order('jurusan')
+          .order('name');
+
+        if (error) throw error;
+        allSiswa = data || [];
+      } catch(e) {
+        console.error('[loadSiswa]', e);
+        allSiswa = [];
+      }
+
+      if (!allSiswa.length) {
+        document.getElementById('students-grid').innerHTML = `
+          <div class="empty-state">
+            <p>Gagal memuat data siswa. Periksa koneksi internet.</p>
+          </div>`;
+        return;
+      }
+
+      updateMeta();
+      renderStudents();
+    }
+
+    // ── UPDATE COUNT & WALI KELAS ──
+    function updateMeta() {
+      const total = allSiswa.length;
+      document.getElementById('total-label').textContent = `${total} siswa`;
+      document.getElementById('count-all').textContent   = `${total} siswa`;
+
+      ['TSM','MP','ATP','APHP'].forEach(j => {
+        const list = allSiswa.filter(s => s.jurusan === j);
+        const countEl = document.getElementById(`count-${j}`);
+        const waliEl  = document.getElementById(`wali-${j}`);
+        if (countEl) countEl.textContent = `${list.length} siswa`;
+        if (waliEl && list[0]?.wali_kelas) waliEl.textContent = list[0].wali_kelas;
+      });
+    }
+
+    // ── RENDER STUDENTS ──
+    function renderStudents(animate = false) {
+      const grid = document.getElementById('students-grid');
+
+      const filtered = allSiswa
+        .filter(s => {
+          if (activeJurusan !== 'all' && s.jurusan !== activeJurusan) return false;
+          if (activeLetter  !== 'all' && s.name.trim().charAt(0).toUpperCase() !== activeLetter) return false;
+          return true;
+        })
+        .sort((a,b) => a.name.localeCompare(b.name, 'id'));
+
+      if (!filtered.length) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <p>Tidak ada siswa yang cocok dengan filter ini.</p>
+            <button class="reset-btn" style="margin:0 auto" onclick="doReset()">Tampilkan Semua</button>
+          </div>`;
+        return;
+      }
+
+      // Hitung nomor per jurusan dari seluruh data (bukan filtered)
+      const counters = { TSM:0, MP:0, ATP:0, APHP:0 };
+      const numMap   = {};
+      allSiswa
+        .slice().sort((a,b) => a.name.localeCompare(b.name,'id'))
+        .forEach(s => { numMap[s.id] = ++counters[s.jurusan]; });
+
+      // Tentukan apakah card harus berwarna (saat filter jurusan aktif)
+      const useColor = activeJurusan !== 'all';
+
+      if (animate) grid.classList.add('switching');
+
+      grid.innerHTML = filtered.map(s => {
+        const num      = numMap[s.id] || '?';
+        const id       = `${s.jurusan}-${String(num).padStart(2,'0')}`;
+        const init     = s.name.trim().charAt(0).toUpperCase();
+        const colorCls = useColor ? ` colored-${s.jurusan}` : '';
+
+        return `
+          <div class="student-card${colorCls}">
+            <div class="student-avatar">${escHtml(init)}</div>
+            <div class="student-name">${escHtml(s.name)}</div>
+            <div class="student-meta">
+              <span class="student-id">#${escHtml(id)}</span>
+              <span class="student-badge">${escHtml(s.jurusan)}</span>
+            </div>
+          </div>`;
+      }).join('');
+
+      if (animate) {
+        setTimeout(() => grid.classList.remove('switching'), 350);
+      }
+    }
+
+    // ── SKELETON ──
+    function showSkeleton() {
+      document.getElementById('students-grid').innerHTML = Array(8).fill(`
+        <div class="skeleton-card">
+          <div class="skel" style="width:40px;height:40px;margin-bottom:10px"></div>
+          <div class="skel" style="height:10px;width:85%;margin-bottom:6px"></div>
+          <div class="skel" style="height:8px;width:40%"></div>
+        </div>`).join('');
+    }
+
+    // ── BUILD ALPHABET ──
+    function buildAlphabet() {
+      document.getElementById('alpha-grid').innerHTML = LETTERS.map(l => {
+        const val = l === 'All' ? 'all' : l;
+        return `<button class="alpha-btn ${val === 'all' ? 'active' : ''}"
+                        data-letter="${val}">${l}</button>`;
+      }).join('');
+    }
+
+    // ── BIND FILTERS ──
+    function bindFilters() {
+      document.getElementById('card-semua')?.addEventListener('click', () => {
+        if (activeJurusan === 'all') return;
+        activeJurusan = 'all';
+        activeLetter  = 'all';
+        syncUI();
+        renderStudents(true);
+      });
+
+      document.querySelectorAll('.jurusan-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const j = card.dataset.jurusan;
+          if (activeJurusan === j) return;
+          activeJurusan = j;
+          activeLetter  = 'all';
+          syncUI();
+          renderStudents(true);
+        });
+      });
+
+      document.getElementById('alpha-grid')?.addEventListener('click', e => {
+        const btn = e.target.closest('.alpha-btn');
+        if (!btn || activeJurusan !== 'all') return;
+        activeLetter = btn.dataset.letter;
+        syncUI();
+        renderStudents(false);
+      });
+
+      document.getElementById('reset-btn')?.addEventListener('click', doReset);
+    }
+
+    function doReset() {
+      activeJurusan = 'all';
+      activeLetter  = 'all';
+      syncUI();
+      renderStudents(true);
+    }
+    window.doReset = doReset;
+
+    // Dipanggil dari hero quick filter
+    function activateJurusan(j) {
+      activeJurusan = j;
+      activeLetter  = 'all';
+      syncUI();
+      renderStudents(true);
+      // Scroll ke grid siswa
+      document.querySelector('.students-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    window.activateJurusan = activateJurusan;
+
+    // ── SYNC UI ──
+    function syncUI() {
+      // Card semua
+      document.getElementById('card-semua').classList.toggle('active', activeJurusan === 'all');
+
+      // Jurusan cards
+      document.querySelectorAll('.jurusan-card').forEach(c => {
+        c.classList.toggle('active', c.dataset.jurusan === activeJurusan);
+      });
+
+      // Count badge warna — default gold, aktif warna jurusan
+      ['TSM','MP','ATP','APHP'].forEach(j => {
+        const el = document.getElementById(`count-${j}`);
+        if (!el) return;
+        el.style.color = activeJurusan === j ? JC[j] : 'var(--gold-dim)';
+      });
+
+      // Badge dot di hero
+      const dot = document.getElementById('badge-dot');
+      if (dot) dot.style.background = activeJurusan !== 'all' ? JC[activeJurusan] : 'var(--border-gold)';
+
+      // Alphabet
+      document.querySelectorAll('.alpha-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.letter === activeLetter);
+        btn.classList.toggle('dimmed', activeJurusan !== 'all');
+      });
+    }
+
+    // ── HELPER ──
+    function escHtml(str) {
+      return String(str || '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>

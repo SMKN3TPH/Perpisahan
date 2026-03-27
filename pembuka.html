@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pembuka — Pernah di Sini</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  /* ── WRAPPER ── */
+  .content-wrap {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── PROSE ── */
+  .prose-section { padding: 56px 0 40px; }
+  .prose {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 400; line-height: 2;
+    color: var(--text-muted);
+  }
+  .prose p  { margin-bottom: 20px; }
+  .prose em { color: var(--text); font-style: italic; }
+
+  /* ── STATS ── */
+  .stats-section {
+    background: var(--bg-raised);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 24px;
+  }
+  .stats-inner {
+    max-width: var(--page-max); margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .stat-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    padding: 24px 16px; text-align: center; position: relative; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--border-gold); }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .stat-number {
+    font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 700;
+    color: var(--gold); line-height: 1; margin-bottom: 6px;
+  }
+  .stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
+
+  /* ── NAV CARDS ── */
+  .cards-section { padding: 48px 0 0; }
+  .cards-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    background: var(--border); border: 1px solid var(--border);
+  }
+  .nav-card {
+    background: var(--bg-card); padding: 24px 20px;
+    text-decoration: none; color: var(--text);
+    display: flex; flex-direction: column; gap: 10px;
+    transition: background 0.2s;
+  }
+  .nav-card:hover { background: var(--bg-hover); }
+  .nav-card:hover .nav-card-icon { color: var(--gold); }
+  .nav-card-eyebrow {
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim);
+  }
+  .nav-card-title {
+    font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--text);
+  }
+  .nav-card-desc  { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .nav-card-arrow {
+    margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);
+    font-size: 10px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-card-arrow svg { transition: transform 0.2s; }
+  .nav-card:hover .nav-card-arrow svg { transform: translateX(4px); }
+
+  /* ── DESKTOP ── */
+  @media (min-width: 1024px) {
+    .content-wrap { max-width: var(--desktop-max); padding: 0 48px; }
+
+    /* Prose: left col, stats: right col */
+    .prose-stats-desktop {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      padding: 80px 48px 0;
+      max-width: var(--desktop-max);
+      margin: 0 auto;
+    }
+    .prose-section { padding: 0; }
+    .prose         { font-size: 21px; }
+
+    .stats-section { padding: 0; background: none; border: none; }
+    .stats-inner {
+      max-width: 100%; margin: 0;
+      grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .stat-number { font-size: 52px; }
+
+    .cards-section { padding: 72px 0 0; }
+    .cards-wrap { max-width: var(--desktop-max); margin: 0 auto; padding: 0 48px; }
+    .cards-grid { grid-template-columns: repeat(4, 1fr); }
+    .nav-card   { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">Pernah di Sini</a>
+      <div class="navbar-links">
+        <a href="angkatan.html" class="nav-link">Angkatan</a>
+        <a href="galeri.html"   class="nav-link">Galeri</a>
+        <a href="pesan.html"    class="nav-link">Pesan</a>
+        <a href="pustaka.html"  class="nav-link">Pustaka</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PROSE + STATS: desktop = 2 col, mobile = stacked -->
+  <div class="prose-stats-desktop">
+
+    <!-- Prose -->
+    <div class="prose-section">
+      <div class="content-wrap">
+        <div class="section-label">Pengantar</div>
+        <div class="prose">
+          <p>Ada tempat yang pernah kita datangi setiap pagi.</p>
+          <p>Ada wajah yang dulu terasa biasa, tapi nanti akan <em>dirindukan.</em></p>
+          <p>Waktu berjalan diam-diam, dan tanpa sadar kita sampai di halaman terakhir.</p>
+          <p>Mungkin suatu hari nanti kita akan lupa banyak hal.</p>
+          <p><em>Tapi satu hal pasti: "kita pernah di sini".</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-section">
+      <div class="stats-inner">
+        <div class="stat-card"><div class="stat-number">68</div><div class="stat-label">Siswa</div></div>
+        <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Jurusan</div></div>
+        <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Wali Kelas</div></div>
+        <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Tahun Bersama</div></div>
+      </div>
+    </div>
+
+  </div><!-- /prose-stats-desktop -->
+
+  <!-- NAV CARDS -->
+  <div class="cards-section">
+    <div class="cards-wrap">
+      <div class="content-wrap">
+        <div class="section-label" style="margin-bottom:20px">Jelajahi</div>
+      </div>
+      <div class="cards-grid">
+        <a href="angkatan.html" class="nav-card">
+          <div class="nav-card-icon"><i class="fas fa-users"></i></div>
+          <div class="nav-card-title">Angkatan</div>
+          <div class="nav-card-desc">68 nama, 4 jurusan, satu angkatan yang sama.</div>
+          <div class="nav-card-arrow">Buka <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+        <a href="galeri.html" class="nav-card">
+          <div class="nav-card-icon"><i class="fas fa-images"></i></div>
+          <div class="nav-card-title">Galeri</div>
+          <div class="nav-card-desc">Dokumentasi resmi dan kiriman teman-teman.</div>
+          <div class="nav-card-arrow">Buka <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+        <a href="pesan.html" class="nav-card">
+          <div class="nav-card-icon"><i class="fas fa-pen-nib"></i></div>
+          <div class="nav-card-title">Pesan</div>
+          <div class="nav-card-desc">Tinggalkan kenangan dalam kata sebelum waktunya habis.</div>
+          <div class="nav-card-arrow">Buka <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+        <a href="pustaka.html" class="nav-card">
+          <div class="nav-card-icon"><i class="fas fa-book-open"></i></div>
+          <div class="nav-card-title">Pustaka</div>
+          <div class="nav-card-desc">Profil sekolah, wali kelas, dan informasi lainnya.</div>
+          <div class="nav-card-arrow">Buka <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <footer class="footer-nav">
+    <div class="footer-nav-inner">
+      <a href="index.html" class="footer-prev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Sampul</a>
+      <a href="angkatan.html" class="footer-next">Angkatan <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </footer>
+  <div class="toast" id="toast"></div>
+</body>
+</html>

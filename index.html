@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pernah di Sini — SMK Negeri 3 Tapung Hulu</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    overflow: hidden;
+    animation: none;
+  }
+
+  .cover-texture {
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 60px,
+        rgba(255,255,255,0.012) 60px, rgba(255,255,255,0.012) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px,
+        rgba(255,255,255,0.012) 60px, rgba(255,255,255,0.012) 61px);
+    pointer-events: none;
+  }
+
+  .cover-spine {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 8px;
+    background: linear-gradient(180deg, var(--gold-dim) 0%, var(--gold) 50%, var(--gold-dim) 100%);
+    box-shadow: 2px 0 16px rgba(185,155,90,0.15);
+  }
+
+  .cover-border {
+    position: fixed;
+    inset: 20px 20px 20px 28px;
+    border: 1px solid var(--border-gold);
+    pointer-events: none;
+  }
+  .cover-border::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgba(185,155,90,0.1);
+  }
+
+  .cover-corner {
+    position: absolute;
+    width: 28px; height: 28px;
+    border-color: var(--gold);
+    border-style: solid;
+  }
+  .cover-corner.tl { top: -1px;  left: -1px;  border-width: 1px 0 0 1px; }
+  .cover-corner.tr { top: -1px;  right: -1px; border-width: 1px 1px 0 0; }
+  .cover-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
+  .cover-corner.br { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+  .cover-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 40px 32px;
+    max-width: 340px;
+  }
+
+  .cover-year {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: slideUp 0.8s 0.3s forwards;
+  }
+
+  .cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 12vw, 64px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: slideUp 0.8s 0.5s forwards;
+  }
+  .cover-title em {
+    font-style: italic;
+    color: var(--gold);
+    display: block;
+  }
+
+  .cover-divider {
+    width: 48px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 24px auto;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .cover-school {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    line-height: 1.8;
+    opacity: 0;
+    animation: slideUp 0.8s 1s forwards;
+  }
+  .cover-school strong {
+    display: block;
+    color: var(--text);
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .btn-open {
+    margin-top: 48px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: slideUp 0.8s 1.3s forwards;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-open::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+  .btn-open:hover { color: var(--bg); border-color: var(--gold); }
+  .btn-open:hover::before { transform: translateX(0); }
+  .btn-open svg { transition: transform 0.3s ease; }
+  .btn-open:hover svg { transform: translateX(4px); }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @media (min-width: 1024px) {
+    .cover-content  { max-width: 480px; }
+    .cover-title    { font-size: 80px; }
+    .cover-year     { font-size: 12px; letter-spacing: 6px; }
+    .btn-open       { padding: 16px 48px; font-size: 13px; }
+    /* Wider border frame */
+    .cover-border   { inset: 32px 48px 32px 48px; }
+    .cover-corner.tl { top: -1px; left: -1px; }
+    .cover-corner.tr { top: -1px; right: -1px; }
+    .cover-corner.bl { bottom: -1px; left: -1px; }
+    .cover-corner.br { bottom: -1px; right: -1px; }
+  }
+</style>
+</head>
+<body>
+  <div class="cover-texture"></div>
+  <div class="cover-spine"></div>
+  <div class="cover-border">
+    <div class="cover-corner tl"></div>
+    <div class="cover-corner tr"></div>
+    <div class="cover-corner bl"></div>
+    <div class="cover-corner br"></div>
+  </div>
+
+  <div class="cover-content">
+    <div class="cover-year">Buku Kenangan · 2026</div>
+    <div class="cover-title">
+      Pernah
+      <em>di Sini</em>
+    </div>
+    <div class="cover-divider"></div>
+    <div class="cover-school">
+      <strong>SMK Negeri 3 Tapung Hulu</strong>
+      Angkatan 2026
+    </div>
+    <a href="pembuka.html" class="btn-open">
+      Buka Buku
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesan — Pernah di Sini</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  .pesan-form {
+    background:var(--bg-card); border:1px solid var(--border); padding:28px;
+    margin-bottom:40px; position:relative;
+  }
+  .pesan-form::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .form-title { font-family:'Playfair Display',serif; font-size:18px; font-style:italic; margin-bottom:20px; color:var(--text); }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+  .form-full { grid-column:span 2; }
+  .form-field textarea { resize:vertical; min-height:120px; font-size:15px; line-height:1.7; }
+  .char-count { text-align:right; font-size:11px; color:var(--text-dim); margin-top:4px; }
+
+  .quota-info {
+    background:rgba(185,155,90,0.06); border:1px solid var(--border-gold);
+    padding:10px 14px; font-size:12px; color:var(--text-muted);
+    margin-bottom:16px; display:flex; align-items:center; gap:8px; line-height:1.5;
+  }
+  .quota-info strong { color:var(--gold); }
+
+  .night-banner {
+    background:var(--bg-raised); border:1px solid var(--border); padding:10px 14px;
+    font-size:12px; color:var(--text-muted); margin-bottom:16px; display:flex; align-items:center; gap:8px;
+  }
+
+  /* Filter jurusan */
+  .filter-jurusan { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:28px; }
+  .jurusan-filter-btn {
+    background:none; border:1px solid var(--border); font-family:'DM Sans',sans-serif;
+    font-size:10px; letter-spacing:1.5px; text-transform:uppercase; padding:6px 14px;
+    cursor:pointer; color:var(--text-muted); transition:all 0.2s; position:relative;
+  }
+  .jurusan-filter-btn:hover { border-color:var(--border-gold); color:var(--text); }
+  .jurusan-filter-btn.active { background:var(--gold); border-color:var(--gold); color:var(--bg); }
+  .count-badge {
+    font-size:9px; background:var(--bg-hover); padding:1px 5px; border-radius:10px;
+    margin-left:4px; color:var(--text-dim);
+  }
+  .jurusan-filter-btn.active .count-badge { background:rgba(0,0,0,0.2); color:var(--bg); }
+
+  /* Messages */
+  .messages-list { display:flex; flex-direction:column; gap:14px; }
+  .message-card {
+    background:var(--bg-card); border:1px solid var(--border); padding:24px;
+    transition:border-color 0.2s;
+  }
+  .message-card:hover { border-color:var(--border-gold); }
+  .message-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:12px; }
+  .message-author { font-size:14px; font-weight:400; color:var(--text); }
+  .message-meta   { font-size:11px; color:var(--text-dim); margin-top:2px; }
+  .message-time   { font-size:11px; color:var(--text-dim); white-space:nowrap; flex-shrink:0; }
+  .message-text   { font-family:'Playfair Display',serif; font-size:15px; line-height:1.85; color:var(--text-muted); margin-bottom:16px; }
+
+  .message-actions { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .action-btn {
+    background:none; border:1px solid var(--border); padding:5px 12px; font-size:12px;
+    cursor:pointer; transition:all 0.15s; color:var(--text-muted); display:flex; align-items:center; gap:5px;
+    font-family:'DM Sans',sans-serif;
+  }
+  .action-btn:hover  { border-color:var(--border-gold); color:var(--text); }
+  .action-btn.liked  { background:var(--gold); color:var(--bg); border-color:var(--gold); }
+
+  .reaction-pills { display:flex; gap:4px; flex-wrap:wrap; }
+  .reaction-count {
+    background:var(--bg-raised); border:1px solid var(--border); border-radius:20px;
+    padding:3px 10px; font-size:12px; color:var(--text-muted); cursor:pointer; transition:all 0.15s;
+  }
+  .reaction-count:hover { border-color:var(--border-gold); color:var(--text); }
+
+  .react-trigger-btn {
+    background:none; border:1px dashed var(--border); padding:4px 10px;
+    font-size:14px; cursor:pointer; border-radius:2px; transition:border-color 0.15s;
+  }
+  .react-trigger-btn:hover { border-color:var(--gold-dim); }
+
+  .react-picker {
+    margin-top:10px; display:flex; gap:4px; padding:8px 10px;
+    background:var(--bg-raised); border:1px solid var(--border);
+    animation:fadePickIn 0.15s ease;
+  }
+  .react-picker.hidden { display:none; }
+  .emoji-react-btn {
+    background:none; border:1px solid transparent; font-size:20px;
+    cursor:pointer; padding:4px 6px; border-radius:4px; transition:background 0.15s, transform 0.15s;
+  }
+  .emoji-react-btn:hover { background:var(--bg-hover); transform:scale(1.2); }
+  .emoji-react-btn.active { border-color:var(--gold-dim); background:var(--bg-hover); }
+
+  @keyframes fadePickIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes shimmer    { 0%,100%{opacity:1} 50%{opacity:0.35} }
+  @keyframes spin       { to{transform:rotate(360deg)} }
+
+  @media (max-width:360px) { .form-row { grid-template-columns:1fr; } .form-full { grid-column:span 1; } }
+
+
+  @media (min-width: 1024px) {
+    #main-pesan-wrapper {
+      max-width: var(--desktop-max) !important;
+      padding: 64px 48px 80px !important;
+    }
+    .desktop-cols {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+    .desktop-left  { position: sticky; top: 84px; }
+    .desktop-right { min-width: 0; }
+    .pesan-form    { margin-bottom: 0; }
+    .filter-jurusan { flex-wrap: nowrap; overflow-x: auto; }
+    .message-text  { font-size: 16px; line-height: 1.95; }
+  }
+
+</style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">Pernah di Sini</a>
+      <div class="navbar-links">
+        <a href="angkatan.html" class="nav-link">Angkatan</a>
+        <a href="galeri.html"   class="nav-link">Galeri</a>
+        <a href="pesan.html"    class="nav-link active">Pesan</a>
+        <a href="pustaka.html"  class="nav-link">Pustaka</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper" id="main-pesan-wrapper">
+    <div class="page-heading">
+      <h1>Buku Pesan</h1>
+      <p>Tinggalkan kenangan dalam kata</p>
+    </div>
+
+    <!-- DESKTOP: 2 col layout -->
+    <div class="desktop-cols">
+    <div class="desktop-left">
+
+    <!-- FORM -->
+    <div class="pesan-form" id="pesan-form">
+      <div class="form-title">Tulis pesanmu</div>
+      <div class="quota-info" id="quota-info"></div>
+
+      <!-- Identitas pengirim (dari UserMemory) -->
+      <div id="sender-info" style="display:none;font-size:12px;color:var(--gold);margin-bottom:14px;padding:8px 12px;background:rgba(185,155,90,0.06);border:1px solid var(--border-gold)"></div>
+
+      <div class="form-field" style="margin-bottom:12px">
+        <label>Pesan kenangan</label>
+        <textarea id="msg-text" placeholder="Apa yang ingin kamu kenang?" maxlength="300"></textarea>
+        <div class="char-count"><span id="char-count">0</span>/300</div>
+      </div>
+
+      <button class="btn-primary" id="submit-btn" onclick="submitMessage()">
+        Kirim Pesan
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+
+    </div><!-- /desktop-left -->
+    <div class="desktop-right">
+
+    <!-- FILTER JURUSAN -->
+    <div class="filter-jurusan">
+      <button class="jurusan-filter-btn active" data-jurusan="semua">
+        Semua <span class="count-badge">0</span>
+      </button>
+      <button class="jurusan-filter-btn" data-jurusan="TSM">
+        TSM <span class="count-badge">0</span>
+      </button>
+      <button class="jurusan-filter-btn" data-jurusan="MP">
+        MP <span class="count-badge">0</span>
+      </button>
+      <button class="jurusan-filter-btn" data-jurusan="ATP">
+        ATP <span class="count-badge">0</span>
+      </button>
+      <button class="jurusan-filter-btn" data-jurusan="APHP">
+        APHP <span class="count-badge">0</span>
+      </button>
+      <button class="jurusan-filter-btn" data-jurusan="Guru">
+        Guru <span class="count-badge">0</span>
+      </button>
+    </div>
+
+    <!-- DAFTAR PESAN -->
+    <div class="messages-list" id="messages-list"></div>
+
+    </div><!-- /desktop-right -->
+    </div><!-- /desktop-cols -->
+  </div><!-- /page-wrapper -->
+
+  <footer class="footer-nav">
+    <div class="footer-nav-inner">
+      <a href="galeri.html" class="footer-prev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Galeri</a>
+      <a href="pustaka.html" class="footer-next">Pustaka <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </footer>
+  <div class="toast" id="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="user-memory.js"></script>
+  <script src="pesan.js"></script>
+  <script>
+    // Tahan load pesan sampai profil siap
+    // initUserSession() akan tampilkan modal blocking kalau profil belum ada
+    document.addEventListener('DOMContentLoaded', () => {
+      // Disable tombol kirim & sembunyikan form dulu
+      const submitBtn  = document.getElementById('submit-btn');
+      const pesanForm  = document.getElementById('pesan-form');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.4'; }
+
+      initUserSession((user) => {
+        // Profil siap — aktifkan form
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; }
+
+        // Tampilkan identitas pengirim
+        const senderInfo = document.getElementById('sender-info');
+        if (senderInfo) {
+          senderInfo.textContent = `Kirim sebagai: ${user.name} · ${user.role}${user.jurusan ? ' · ' + user.jurusan : ''}`;
+          senderInfo.style.display = 'block';
+        }
+
+        // Baru load pesan setelah profil siap
+        loadPesan('semua');
+      });
+    });
+  </script>
+</body>
+</html>

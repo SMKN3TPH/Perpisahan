@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pustaka — Pernah di Sini</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .school-header {
+    text-align: center;
+    padding: 32px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .school-emblem {
+    width: 76px; height: 76px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold);
+    position: relative;
+    transition: transform 0.3s;
+  }
+  .school-emblem:hover { transform: scale(1.04); }
+  .school-emblem::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border: 1px solid var(--border-gold);
+    opacity: 0.4;
+  }
+
+  .school-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .school-sub { font-size: 13px; color: var(--text-muted); }
+
+  .info-block { margin-bottom: 32px; }
+  .info-block h3 {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .info-item:last-child { border-bottom: none; }
+  .info-item-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 110px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .info-item-value {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .jurusan-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .jurusan-pill {
+    padding: 3px 12px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--bg);
+    font-weight: 500;
+  }
+
+  .social-links { display: flex; flex-direction: column; gap: 8px; }
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    font-size: 13px;
+  }
+  .social-link:hover {
+    border-color: var(--border-gold);
+    color: var(--text);
+    transform: translateX(4px);
+  }
+  .social-icon {
+    width: 34px; height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-raised);
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .social-arrow { margin-left: auto; opacity: 0; transition: opacity 0.2s, transform 0.2s; }
+  .social-link:hover .social-arrow { opacity: 1; transform: translateX(3px); }
+
+  .closing-quote {
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+  .closing-quote p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+  .closing-quote .angkatan-tag {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .closing-quote .gold-line {
+    display: block;
+    width: 40px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 12px auto 0;
+  }
+
+
+  @media (min-width: 1024px) {
+    #main-pustaka-wrapper {
+      max-width: var(--desktop-max) !important;
+      padding: 64px 48px 80px !important;
+    }
+    .desktop-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .school-header {
+      display: flex; align-items: center; gap: 28px;
+      text-align: left; padding-bottom: 40px;
+    }
+    .school-emblem { margin: 0; flex-shrink: 0; }
+    .school-name   { font-size: 26px; }
+    .social-link   { padding: 18px 20px; }
+    .info-item-value { font-size: 15px; }
+  }
+
+</style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-brand">Pernah di Sini</a>
+      <div class="navbar-links">
+        <a href="angkatan.html" class="nav-link">Angkatan</a>
+        <a href="galeri.html"   class="nav-link">Galeri</a>
+        <a href="pesan.html"    class="nav-link">Pesan</a>
+        <a href="pustaka.html"  class="nav-link active">Pustaka</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper" id="main-pustaka-wrapper">
+    <div class="school-header">
+      <div class="school-emblem">SMK 3</div>
+      <div class="school-name">SMK Negeri 3 Tapung Hulu</div>
+      <div class="school-sub">Kabupaten Kampar, Riau</div>
+    </div>
+
+    <div class="desktop-2col">
+    <div class="info-block">
+      <h3>Profil Sekolah</h3>
+      <div class="info-item">
+        <span class="info-item-label">Nama Sekolah</span>
+        <span class="info-item-value">SMK Negeri 3 Tapung Hulu</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item-label">NPSN</span>
+        <span class="info-item-value">69946373</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item-label">Alamat</span>
+        <span class="info-item-value">Tapung Hulu, Kabupaten Kampar, Riau</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item-label">Akreditasi</span>
+        <span class="info-item-value">B</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item-label">Jurusan</span>
+        <span class="info-item-value">
+          <div class="jurusan-pills">
+            <span class="jurusan-pill" style="background:#E05C50">TSM</span>
+            <span class="jurusan-pill" style="background:#D4AC0D">MP</span>
+            <span class="jurusan-pill" style="background:#27AE60">ATP</span>
+            <span class="jurusan-pill" style="background:#3498DB">APHP</span>
+          </div>
+        </span>
+      </div>
+      <div class="info-item">
+        <span class="info-item-label">Angkatan</span>
+        <span class="info-item-value">2026 · 68 siswa</span>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <h3>Media Sosial &amp; Tautan</h3>
+      <div class="social-links">
+        <a href="#" class="social-link">
+          <div class="social-icon">📸</div>
+          <span>Instagram Sekolah</span>
+          <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="#" class="social-link">
+          <div class="social-icon">🌐</div>
+          <span>Website Resmi Sekolah</span>
+          <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="#" class="social-link">
+          <div class="social-icon">📱</div>
+          <span>Facebook Sekolah</span>
+          <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="#" class="social-link">
+          <div class="social-icon">📺</div>
+          <span>YouTube Sekolah</span>
+          <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+      </div>
+    </div>
+
+    </div><!-- /desktop-2col -->
+
+    <div class="closing-quote">
+      <p>"Tiga tahun bukan waktu yang singkat.<br>Tapi perpisahan datang terlalu cepat."</p>
+      <span class="angkatan-tag">Angkatan 2026</span>
+      <span class="gold-line"></span>
+    </div>
+  </div>
+
+  <footer class="footer-nav">
+    <div class="footer-nav-inner">
+      <a href="pesan.html" class="footer-prev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Pesan</a>
+      <a href="index.html" class="footer-next">Sampul <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </footer>
+  <div class="toast" id="toast"></div>
+</body>
+</html>

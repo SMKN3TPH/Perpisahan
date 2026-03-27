@@ -1,0 +1,410 @@
+/* ══════════════════════════════════════════
+   PERNAH DI SINI — SMK Negeri 3 Tapung Hulu
+   Dark Theme Stylesheet
+══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+:root {
+  --bg:          #0D0D0D;
+  --bg-raised:   #141414;
+  --bg-card:     #1A1A1A;
+  --bg-hover:    #202020;
+  --border:      rgba(255,255,255,0.07);
+  --border-gold: rgba(185,155,90,0.35);
+  --text:        #E8E2D6;
+  --text-muted:  #7A7060;
+  --text-dim:    #4A4438;
+  --gold:        #B99B5A;
+  --gold-bright: #D4B878;
+  --gold-dim:    #7A6535;
+  --red:         #C0392B;
+  --yellow:      #B8940A;
+  --green:       #1E8449;
+  --blue:        #1A6DA3;
+  --shadow:      rgba(0,0,0,0.6);
+  --page-max:    480px;       /* mobile */
+  --desktop-max: 1200px;      /* desktop */
+  --desktop-bp:  1024px;      /* breakpoint */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+  animation: pageIn 0.5s ease;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.7;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+/* ── NAVBAR ── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(13,13,13,0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.navbar-inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+@media (min-width: 1024px) {
+  .navbar-inner { max-width: var(--desktop-max); height: 64px; }
+}
+.navbar-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--gold);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.navbar-brand:hover { color: var(--gold-bright); }
+
+/* Scrollable nav links — support profile chip tanpa wrap */
+.navbar-links {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+  /* fade out kanan supaya ketahuan bisa scroll */
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+}
+.navbar-links::-webkit-scrollbar { display: none; }
+
+/* Kalau tidak ada overflow (desktop), hapus fade */
+@media (min-width: 1024px) {
+  .navbar-links {
+    -webkit-mask-image: none;
+    mask-image: none;
+    overflow-x: visible;
+    gap: 8px;
+  }
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 8px 11px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.2s;
+  position: relative;
+  white-space: nowrap;          /* Jangan wrap teks nav */
+  flex-shrink: 0;               /* Jangan diperkecil */
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 11px; right: 11px;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+.nav-link:hover,
+.nav-link.active { color: var(--text); }
+.nav-link.active::after,
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* ── PAGE WRAPPER ── */
+/* Mobile: narrow centered column */
+.page-wrapper {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+/* Desktop: full width up to desktop-max */
+@media (min-width: 1024px) {
+  .page-wrapper {
+    max-width: var(--desktop-max);
+    padding: 64px 48px 100px;
+  }
+  /* Inner content blocks that should stay narrower on desktop */
+  .page-wrapper .narrow {
+    max-width: 640px;
+  }
+}
+
+/* ── TYPOGRAPHY ── */
+.section-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 60px;
+}
+.page-heading { margin-bottom: 40px; }
+.page-heading h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.page-heading p {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+@media (min-width: 1024px) {
+  .page-heading { margin-bottom: 56px; }
+  .page-heading h1 { font-size: 48px; }
+  .page-heading p  { font-size: 16px; }
+}
+
+/* ── BUTTONS ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 15px 32px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.btn-primary:hover { background: var(--gold-bright); }
+.btn-primary svg { transition: transform 0.2s; }
+.btn-primary:hover svg { transform: translateX(4px); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border-gold);
+  padding: 12px 24px;
+  font-size: 12px;
+  z-index: 9998;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+  max-width: 90vw;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  max-width: 400px;
+  width: 100%;
+  padding: 32px;
+  position: relative;
+  animation: pageIn 0.3s ease;
+}
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-style: italic;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s;
+}
+.modal-close:hover { color: var(--text); }
+
+/* ── FORMS ── */
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text);
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.form-field input::placeholder,
+.form-field textarea::placeholder { color: var(--text-dim); }
+.form-field select option { background: var(--bg-card); color: var(--text); }
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus { border-color: var(--gold-dim); }
+
+
+
+
+
+/* ════════════════════════════════════════════
+   FOOTER NAV — prev/next konsisten semua halaman
+════════════════════════════════════════════ */
+.footer-nav {
+  border-top: 1px solid var(--border);
+  background: var(--bg-raised);
+  padding: 0 24px;
+}
+.footer-nav-inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  gap: 16px;
+}
+.footer-prev,
+.footer-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-muted);
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.footer-prev:hover,
+.footer-next:hover { color: var(--text); }
+
+.footer-prev svg,
+.footer-next svg {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.footer-prev:hover svg { transform: translateX(-3px); }
+.footer-next:hover svg { transform: translateX(3px); }
+
+/* Next button lebih menonjol */
+.footer-next {
+  background: var(--gold);
+  color: var(--bg);
+  padding: 10px 20px;
+  font-weight: 500;
+}
+.footer-next:hover {
+  background: var(--gold-bright);
+  color: var(--bg);
+}
+.footer-next svg { opacity: 0.7; }
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .footer-nav       { padding: 0 48px; }
+  .footer-nav-inner { max-width: var(--desktop-max); height: 64px; }
+  .footer-prev,
+  .footer-next      { font-size: 11px; letter-spacing: 1.5px; }
+  .footer-next      { padding: 12px 28px; }
+}
+
+/* ════════════════════════════════════════════
+   NAVBAR DESKTOP
+════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+  .navbar        { padding: 0 48px; }
+  .navbar-inner  { max-width: var(--desktop-max); height: 64px; }
+  .navbar-brand  { font-size: 17px; }
+  .navbar-links  { gap: 4px; overflow-x: visible; -webkit-mask-image: none; mask-image: none; }
+  .nav-link      { font-size: 11px; padding: 10px 16px; letter-spacing: 1.5px; }
+}

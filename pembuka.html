@@ -51,6 +51,150 @@
   }
   .stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
 
+  /* ── TEMPAT YANG MENYIMPAN CERITA (BARU) ── */
+  .tempat-section {
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 24px;
+  }
+  .tempat-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+  }
+  .tempat-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .tempat-eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .tempat-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .tempat-title span {
+    color: var(--gold);
+    font-style: italic;
+  }
+  .tempat-divider {
+    width: 48px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto;
+  }
+
+  /* Timeline list */
+  .tempat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    position: relative;
+    margin-bottom: 48px;
+  }
+  .tempat-line {
+    position: absolute;
+    left: 11px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
+  }
+  .tempat-item {
+    position: relative;
+    padding-left: 40px;
+  }
+  .tempat-dot {
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 24px;
+    height: 24px;
+    background: var(--bg-alt);
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    z-index: 2;
+  }
+  .tempat-dot i {
+    font-size: 10px;
+    color: var(--gold-dim);
+    transition: all 0.3s;
+  }
+  .tempat-item:hover .tempat-dot {
+    border-color: var(--gold);
+    transform: scale(1.2);
+  }
+  .tempat-item:hover .tempat-dot i {
+    color: var(--gold);
+  }
+  .tempat-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--gold-dim);
+    padding: 20px;
+    transition: all 0.3s;
+  }
+  .tempat-item:hover .tempat-content {
+    border-left-color: var(--gold);
+    border-color: var(--border-gold);
+  }
+  .tempat-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tempat-content h3 i {
+    color: var(--gold-dim);
+    font-size: 14px;
+  }
+  .tempat-content p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-style: italic;
+  }
+  .tempat-year {
+    margin-top: 12px;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  /* Quote penutup */
+  .tempat-quote {
+    text-align: center;
+  }
+  .tempat-quote-box {
+    display: inline-block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 16px 28px;
+  }
+  .tempat-quote-box p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .tempat-quote-box i {
+    color: var(--gold-dim);
+    font-size: 10px;
+    margin: 0 6px;
+  }
+
   /* ── NAV CARDS ── */
   .cards-section { padding: 48px 0 0; }
   .cards-grid {
@@ -84,7 +228,6 @@
   @media (min-width: 1024px) {
     .content-wrap { max-width: var(--desktop-max); padding: 0 48px; }
 
-    /* Prose: left col, stats: right col */
     .prose-stats-desktop {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -104,6 +247,39 @@
     }
     .stat-number { font-size: 52px; }
 
+    /* Tempat section desktop */
+    .tempat-section {
+      padding: 80px 48px;
+    }
+    .tempat-inner {
+      max-width: var(--desktop-max);
+    }
+    .tempat-title {
+      font-size: 36px;
+    }
+    .tempat-content {
+      padding: 24px;
+    }
+    .tempat-content h3 {
+      font-size: 20px;
+    }
+    .tempat-content p {
+      font-size: 14px;
+    }
+    .tempat-line {
+      left: 15px;
+    }
+    .tempat-dot {
+      width: 32px;
+      height: 32px;
+    }
+    .tempat-dot i {
+      font-size: 12px;
+    }
+    .tempat-item {
+      padding-left: 56px;
+    }
+
     .cards-section { padding: 72px 0 0; }
     .cards-wrap { max-width: var(--desktop-max); margin: 0 auto; padding: 0 48px; }
     .cards-grid { grid-template-columns: repeat(4, 1fr); }
@@ -115,12 +291,15 @@
   <nav class="navbar">
     <div class="navbar-inner">
       <a href="index.html" class="navbar-brand">Pernah di Sini</a>
-      <div class="navbar-links">
+      <div class="navbar-links-wrap" id="nav-wrap">
+      <div class="navbar-links" id="navbar-links">
         <a href="angkatan.html" class="nav-link">Angkatan</a>
         <a href="galeri.html"   class="nav-link">Galeri</a>
         <a href="pesan.html"    class="nav-link">Pesan</a>
         <a href="pustaka.html"  class="nav-link">Pustaka</a>
-      </div>
+      </div><!-- /navbar-links -->
+      <i class="fas fa-chevron-right navbar-scroll-hint" id="nav-hint"></i>
+      </div><!-- /navbar-links-wrap -->
     </div>
   </nav>
 
@@ -136,7 +315,7 @@
           <p>Ada wajah yang dulu terasa biasa, tapi nanti akan <em>dirindukan.</em></p>
           <p>Waktu berjalan diam-diam, dan tanpa sadar kita sampai di halaman terakhir.</p>
           <p>Mungkin suatu hari nanti kita akan lupa banyak hal.</p>
-          <p><em>Tapi satu hal pasti: "kita pernah di sini".</em></p>
+          <p><em>Tapi satu hal pasti: kita pernah di sini.</em></p>
         </div>
       </div>
     </div>
@@ -152,6 +331,72 @@
     </div>
 
   </div><!-- /prose-stats-desktop -->
+
+  <!-- ========== TEMPAT YANG MENYIMPAN CERITA ========== -->
+  <div class="tempat-section">
+    <div class="tempat-inner">
+      <div class="tempat-header">
+        <div class="tempat-eyebrow">— Tempat yang Menyimpan Cerita —</div>
+        <h2 class="tempat-title">Di Mana <span>Kita Pernah</span> Berada</h2>
+        <div class="tempat-divider"></div>
+      </div>
+
+      <div class="tempat-list">
+        <div class="tempat-line"></div>
+
+        <div class="tempat-item">
+          <div class="tempat-dot"><i class="fas fa-road"></i></div>
+          <div class="tempat-content">
+            <h3><i class="fas fa-road"></i> Lorong Utama</h3>
+            <p>“Kita pernah berlari di sini karena telat. Dan tertawa setelahnya. Lorong ini jadi saksi ribuan langkah kaki yang tak lagi terdengar.”</p>
+            <div class="tempat-year">— 2023–2026 —</div>
+          </div>
+        </div>
+
+        <div class="tempat-item">
+          <div class="tempat-dot"><i class="fas fa-chalkboard"></i></div>
+          <div class="tempat-content">
+            <h3><i class="fas fa-chalkboard"></i> Ruang Kelas</h3>
+            <p>“Suara kipas yang berputar, coretan papan tulis yang tak pernah habis, dan meja kayu yang jadi saksi bisu diskusi, canda, dan mimpi-mimpi kita.”</p>
+            <div class="tempat-year">— 1080 hari bersama —</div>
+          </div>
+        </div>
+
+        <div class="tempat-item">
+          <div class="tempat-dot"><i class="fas fa-building"></i></div>
+          <div class="tempat-content">
+            <h3><i class="fas fa-building"></i> Gedung Lama</h3>
+            <p>“Sebagian besar cerita kita lahir di sini. Dindingnya mungkin sudah kusam, tapi kenangannya tetap berwarna.”</p>
+            <div class="tempat-year">— Tempat pertama —</div>
+          </div>
+        </div>
+
+        <div class="tempat-item">
+          <div class="tempat-dot"><i class="fas fa-school"></i></div>
+          <div class="tempat-content">
+            <h3><i class="fas fa-school"></i> Gedung Baru</h3>
+            <p>“Kita datang sebagai angkatan yang sudah setengah selesai, tapi tetap beradaptasi. Di sinilah kita menghabiskan tahun-tahun terakhir.”</p>
+            <div class="tempat-year">— Babak akhir —</div>
+          </div>
+        </div>
+
+        <div class="tempat-item">
+          <div class="tempat-dot"><i class="fas fa-futbol"></i></div>
+          <div class="tempat-content">
+            <h3><i class="fas fa-futbol"></i> Lapangan</h3>
+            <p>“Upacara, olahraga, dan duduk-duduk saat jam kosong — langit yang sama menyaksikan kita tumbuh.”</p>
+            <div class="tempat-year">— Langit yang sama —</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tempat-quote">
+        <div class="tempat-quote-box">
+          <p><i class="fas fa-quote-left"></i> 5 tempat, 68 cerita, 1 angkatan <i class="fas fa-quote-right"></i></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- NAV CARDS -->
   <div class="cards-section">
@@ -188,7 +433,6 @@
     </div>
   </div>
 
-
   <footer class="footer-nav">
     <div class="footer-nav-inner">
       <a href="index.html" class="footer-prev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Sampul</a>
@@ -196,5 +440,22 @@
     </div>
   </footer>
   <div class="toast" id="toast"></div>
+
+  <script>
+    // Navbar scroll hint — sembunyikan chevron saat sudah scroll ke ujung
+    (function() {
+      const links = document.getElementById('navbar-links');
+      const wrap  = document.getElementById('nav-wrap');
+      const hint  = document.getElementById('nav-hint');
+      if (!links || !wrap) return;
+      function checkScroll() {
+        const atEnd = links.scrollLeft + links.clientWidth >= links.scrollWidth - 4;
+        wrap.classList.toggle('at-end', atEnd);
+        if (hint) hint.style.opacity = atEnd ? '0' : '1';
+      }
+      links.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    })();
+  </script>
 </body>
 </html>

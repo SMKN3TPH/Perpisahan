@@ -39,6 +39,10 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   animation: pageIn 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  /* Padding bottom untuk memberi ruang footer fixed */
+  padding-bottom: 72px;
 }
 
 body::before {
@@ -60,7 +64,7 @@ body::before {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
 
-/* ── NAVBAR ── */
+/* ── NAVBAR (STICKY ATAS) ── */
 .navbar {
   position: sticky;
   top: 0;
@@ -100,15 +104,13 @@ body::before {
   align-items: center;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE/Edge */
-  /* fade out kanan supaya ketahuan bisa scroll */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
   mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
 }
 .navbar-links::-webkit-scrollbar { display: none; }
 
-/* Kalau tidak ada overflow (desktop), hapus fade */
 @media (min-width: 1024px) {
   .navbar-links {
     -webkit-mask-image: none;
@@ -133,8 +135,8 @@ body::before {
   display: inline-block;
   transition: color 0.2s;
   position: relative;
-  white-space: nowrap;          /* Jangan wrap teks nav */
-  flex-shrink: 0;               /* Jangan diperkecil */
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .nav-link::after {
   content: '';
@@ -150,20 +152,87 @@ body::before {
 .nav-link.active::after,
 .nav-link:hover::after { transform: scaleX(1); }
 
+/* ── FOOTER NAV (FIXED DI BAWAH) ── */
+.footer-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(20,20,20,0.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-gold);
+  padding: 0 24px;
+  z-index: 90;
+}
+.footer-nav-inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  gap: 16px;
+}
+.footer-prev,
+.footer-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-muted);
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.footer-prev:hover,
+.footer-next:hover { color: var(--text); }
+
+.footer-prev svg,
+.footer-next svg {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.footer-prev:hover svg { transform: translateX(-3px); }
+.footer-next:hover svg { transform: translateX(3px); }
+
+/* Next button lebih menonjol */
+.footer-next {
+  background: var(--gold);
+  color: var(--bg);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-weight: 500;
+}
+.footer-next:hover {
+  background: var(--gold-bright);
+  color: var(--bg);
+}
+.footer-next svg { opacity: 0.8; }
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .footer-nav       { padding: 0 48px; }
+  .footer-nav-inner { max-width: var(--desktop-max); height: 64px; }
+  .footer-prev,
+  .footer-next      { font-size: 11px; letter-spacing: 1.5px; }
+  .footer-next      { padding: 10px 24px; }
+}
+
 /* ── PAGE WRAPPER ── */
-/* Mobile: narrow centered column */
 .page-wrapper {
   max-width: var(--page-max);
   margin: 0 auto;
   padding: 48px 24px 80px;
 }
-/* Desktop: full width up to desktop-max */
 @media (min-width: 1024px) {
   .page-wrapper {
     max-width: var(--desktop-max);
     padding: 64px 48px 100px;
   }
-  /* Inner content blocks that should stay narrower on desktop */
   .page-wrapper .narrow {
     max-width: 640px;
   }
@@ -224,6 +293,7 @@ body::before {
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
+  border-radius: 40px;
 }
 .btn-primary:hover { background: var(--gold-bright); }
 .btn-primary svg { transition: transform 0.2s; }
@@ -232,7 +302,7 @@ body::before {
 /* ── TOAST ── */
 .toast {
   position: fixed;
-  bottom: 24px;
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
   background: var(--bg-card);
@@ -246,6 +316,7 @@ body::before {
   max-width: 90vw;
   text-align: center;
   letter-spacing: 0.3px;
+  border-radius: 40px;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -254,21 +325,23 @@ body::before {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.82);
+  background: rgba(0,0,0,0.85);
   z-index: 500;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  backdrop-filter: blur(8px);
 }
 .modal-overlay.open { display: flex; }
 .modal {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
   padding: 32px;
   position: relative;
   animation: pageIn 0.3s ease;
+  border-radius: 24px;
 }
 .modal::before {
   content: '';
@@ -276,10 +349,11 @@ body::before {
   top: 0; left: 0; right: 0;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  border-radius: 24px 24px 0 0;
 }
 .modal-title {
   font-family: 'Playfair Display', serif;
-  font-size: 22px;
+  font-size: 24px;
   font-style: italic;
   margin-bottom: 6px;
   color: var(--text);
@@ -290,7 +364,7 @@ body::before {
   top: 16px; right: 16px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 22px;
   cursor: pointer;
   color: var(--text-muted);
   line-height: 1;
@@ -300,7 +374,7 @@ body::before {
 .modal-close:hover { color: var(--text); }
 
 /* ── FORMS ── */
-.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .form-field label {
   font-size: 10px;
   letter-spacing: 1.5px;
@@ -317,10 +391,11 @@ body::before {
   font-size: 14px;
   font-weight: 300;
   color: var(--text);
-  padding: 10px 14px;
+  padding: 12px 14px;
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
+  border-radius: 12px;
 }
 .form-field input::placeholder,
 .form-field textarea::placeholder { color: var(--text-dim); }
@@ -329,78 +404,47 @@ body::before {
 .form-field select:focus,
 .form-field textarea:focus { border-color: var(--gold-dim); }
 
-
-
-
-
-/* ════════════════════════════════════════════
-   FOOTER NAV — prev/next konsisten semua halaman
-════════════════════════════════════════════ */
-.footer-nav {
-  border-top: 1px solid var(--border);
-  background: var(--bg-raised);
-  padding: 0 24px;
-}
-.footer-nav-inner {
-  max-width: var(--page-max);
-  margin: 0 auto;
+/* ── NAVBAR SCROLL INDICATOR ── */
+.navbar-links-wrap {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 56px;
-  gap: 16px;
+  justify-content: flex-end;
 }
-.footer-prev,
-.footer-next {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--text-muted);
-  transition: color 0.2s;
-  white-space: nowrap;
+.navbar-links-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 40px;
+  background: linear-gradient(to right, transparent, rgba(13,13,13,0.95));
+  pointer-events: none;
+  transition: opacity 0.3s;
 }
-.footer-prev:hover,
-.footer-next:hover { color: var(--text); }
+.navbar-links-wrap.at-end::after { opacity: 0; }
 
-.footer-prev svg,
-.footer-next svg {
-  flex-shrink: 0;
-  transition: transform 0.2s;
+.navbar-scroll-hint {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-dim);
+  font-size: 10px;
+  pointer-events: none;
+  animation: hintPulse 2s ease infinite;
+  z-index: 2;
 }
-.footer-prev:hover svg { transform: translateX(-3px); }
-.footer-next:hover svg { transform: translateX(3px); }
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.4; transform: translateY(-50%) translateX(0); }
+  50%       { opacity: 1;   transform: translateY(-50%) translateX(2px); }
+}
 
-/* Next button lebih menonjol */
-.footer-next {
-  background: var(--gold);
-  color: var(--bg);
-  padding: 10px 20px;
-  font-weight: 500;
-}
-.footer-next:hover {
-  background: var(--gold-bright);
-  color: var(--bg);
-}
-.footer-next svg { opacity: 0.7; }
-
-/* Desktop */
 @media (min-width: 1024px) {
-  .footer-nav       { padding: 0 48px; }
-  .footer-nav-inner { max-width: var(--desktop-max); height: 64px; }
-  .footer-prev,
-  .footer-next      { font-size: 11px; letter-spacing: 1.5px; }
-  .footer-next      { padding: 12px 28px; }
+  .navbar-links-wrap::after  { display: none; }
+  .navbar-scroll-hint        { display: none; }
 }
 
-/* ════════════════════════════════════════════
-   NAVBAR DESKTOP
-════════════════════════════════════════════ */
+/* ── DESKTOP NAVBAR ── */
 @media (min-width: 1024px) {
   .navbar        { padding: 0 48px; }
   .navbar-inner  { max-width: var(--desktop-max); height: 64px; }

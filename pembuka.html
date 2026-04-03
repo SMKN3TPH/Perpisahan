@@ -15,14 +15,25 @@
   }
 
   /* ── PROSE ── */
-  .prose-section { padding: 56px 0 40px; }
+  .prose-section { padding: 30px 0 20px; }
   .prose {
     font-family: 'Playfair Display', serif;
-    font-size: 18px; font-weight: 400; line-height: 2;
-    color: var(--text-muted);
+    font-size: 17px; font-weight: 400; line-height: 1.7;
+    color: rgba(255,255,255,0.75);
   }
-  .prose p  { margin-bottom: 20px; }
-  .prose em { color: var(--text); font-style: italic; }
+  .prose p  { margin-bottom: 25px; }
+  .prose p.line{ margin: 1px;}
+  .prose em { 
+    color: #fff;
+    font-style: italic; 
+  }
+  .prose .ending {
+    font: 'Playfair Display';
+    color: #fff;
+    margin-top: 48px;
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
 
   /* ── STATS ── */
   .stats-section {
@@ -212,6 +223,11 @@
   .nav-card-eyebrow {
     font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim);
   }
+.highlight {
+  font-style: italic;
+  margin: 28px 0;
+}
+  
   .nav-card-title {
     font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; color: var(--text);
   }
@@ -309,13 +325,36 @@
     <!-- Prose -->
     <div class="prose-section">
       <div class="content-wrap">
-        <div class="section-label">Pengantar</div>
         <div class="prose">
-          <p>Ada tempat yang pernah kita datangi setiap pagi.</p>
-          <p>Ada wajah yang dulu terasa biasa, tapi nanti akan <em>dirindukan.</em></p>
-          <p>Waktu berjalan diam-diam, dan tanpa sadar kita sampai di halaman terakhir.</p>
-          <p>Mungkin suatu hari nanti kita akan lupa banyak hal.</p>
-          <p><em>Tapi satu hal pasti: kita pernah di sini.</em></p>
+          <p>Kami bukan angkatan yang paling heboh.
+            Tapi juga bukan yang biasa saja.</p>
+            
+          <p class="line"><em>Kami datang di masa perubahan.</em>
+          <p class="line">Saat jurusan baru muncul, saat nama-nama lama mulai berubah arti.</p>
+          <p class="line">Yang dulu dikenal, perlahan bergeser.</p>
+          <p>Yang baru, mulai mengambil tempatnya.</p>
+            
+          <p class="line">Di tengah itu semua,<em> kami ada.</em></p>
+          <p class="line">Nggak selalu dekat, tapi juga <em>nggak pernah benar-benar jauh.</em></p>
+          <p>Nggak sempurna, tapi cukup untuk saling mengerti tanpa banyak kata.</p>
+            
+          <p class="line">Nggak semua dari kami selalu terlihat.</p>
+          <p class="line">Nggak semua punya cerita yang diceritakan keras-keras.</p>
+          <p>Tapi itu bukan berarti kami nggak ada.</p>
+            
+          <p>Banyak hal terasa biasa saat dijalani.
+            Tapi sekarang kalau dilihat lagi…</p>
+            
+          <p class="highlight">“Oh… ternyata memang seperti ini ya.”</p>
+          
+          <p class="line">Dan mungkin nanti, saat semuanya sudah lewat…</p>
+          <p>yang tersisa bukan siapa yang paling terlihat,
+            <em>tapi siapa yang pernah ada.</em></p>
+            
+          <p class="line">Ini bukan cerita yang sempurna.</p>
+          <p>Ini cuma bukti kalau…</p>
+          
+          <p class="ending">kami pernah di sini.</em></p>
         </div>
       </div>
     </div>
@@ -384,7 +423,7 @@
           <div class="tempat-dot"><i class="fas fa-futbol"></i></div>
           <div class="tempat-content">
             <h3><i class="fas fa-futbol"></i> Lapangan</h3>
-            <p>“Upacara, olahraga, dan duduk-duduk saat jam kosong — langit yang sama menyaksikan kita tumbuh.”</p>
+            <p>“Upacara, olahraga, dan Apel pagi — langit yang sama menyaksikan kita tumbuh.”</p>
             <div class="tempat-year">— Langit yang sama —</div>
           </div>
         </div>

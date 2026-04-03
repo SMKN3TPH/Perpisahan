@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pustaka — Pernah di Sini</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   .school-header {
     text-align: center;
@@ -174,18 +175,21 @@
   <nav class="navbar">
     <div class="navbar-inner">
       <a href="index.html" class="navbar-brand">Pernah di Sini</a>
-      <div class="navbar-links">
+      <div class="navbar-links-wrap" id="nav-wrap">
+      <div class="navbar-links" id="navbar-links">
         <a href="angkatan.html" class="nav-link">Angkatan</a>
         <a href="galeri.html"   class="nav-link">Galeri</a>
         <a href="pesan.html"    class="nav-link">Pesan</a>
         <a href="pustaka.html"  class="nav-link active">Pustaka</a>
-      </div>
+      </div><!-- /navbar-links -->
+      <i class="fas fa-chevron-right navbar-scroll-hint" id="nav-hint"></i>
+      </div><!-- /navbar-links-wrap -->
     </div>
   </nav>
 
   <div class="page-wrapper" id="main-pustaka-wrapper">
     <div class="school-header">
-      <div class="school-emblem">SMK 3</div>
+      <div class="school-emblem">S3</div>
       <div class="school-name">SMK Negeri 3 Tapung Hulu</div>
       <div class="school-sub">Kabupaten Kampar, Riau</div>
     </div>
@@ -229,24 +233,29 @@
     <div class="info-block">
       <h3>Media Sosial &amp; Tautan</h3>
       <div class="social-links">
-        <a href="#" class="social-link">
-          <div class="social-icon">📸</div>
+        <a href="https://www.instagram.com/smknegeritigatapunghulu/" class="social-link">
+          <div class="social-icon"><i class="fab fa-instagram" style="color:#E1306C"></i></div>
           <span>Instagram Sekolah</span>
           <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </a>
-        <a href="#" class="social-link">
-          <div class="social-icon">🌐</div>
-          <span>Website Resmi Sekolah</span>
-          <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-        </a>
-        <a href="#" class="social-link">
-          <div class="social-icon">📱</div>
+        <a href="https://www.facebook.com/p/SMKN-3-Tapung-Hulu-100093093844329/" class="social-link">
+          <div class="social-icon"><i class="fab fa-facebook-f" style="color:#1877F2"></i></div>
           <span>Facebook Sekolah</span>
           <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </a>
-        <a href="#" class="social-link">
-          <div class="social-icon">📺</div>
+        <a href="https://youtube.com/@smkn3tapunghulu?si=j3iJLv2gODtss_2M" class="social-link">
+          <div class="social-icon"><i class="fab fa-youtube" style="color:#FF0000"></i></div>
           <span>YouTube Sekolah</span>
+          <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="https://www.tiktok.com/@smkn3tapunghulu?_r=1&_t=ZS-95EIklWM7CK" class="social-link">
+          <div class="social-icon"><i class="fab fa-tiktok" style="color:#ffffff"></i></div>
+          <span>TikTok Sekolah</span>
+          <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </a>
+        <a href="#" class="social-link">
+          <div class="social-icon"><i class="fas fa-globe" style="color:var(--gold-dim)"></i></div>
+          <span>Website Resmi Sekolah</span>
           <span class="social-arrow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </a>
       </div>
@@ -268,5 +277,22 @@
     </div>
   </footer>
   <div class="toast" id="toast"></div>
+
+  <script>
+    // Navbar scroll hint — sembunyikan chevron saat sudah scroll ke ujung
+    (function() {
+      const links = document.getElementById('navbar-links');
+      const wrap  = document.getElementById('nav-wrap');
+      const hint  = document.getElementById('nav-hint');
+      if (!links || !wrap) return;
+      function checkScroll() {
+        const atEnd = links.scrollLeft + links.clientWidth >= links.scrollWidth - 4;
+        wrap.classList.toggle('at-end', atEnd);
+        if (hint) hint.style.opacity = atEnd ? '0' : '1';
+      }
+      links.addEventListener('scroll', checkScroll, { passive: true });
+      checkScroll();
+    })();
+  </script>
 </body>
 </html>
